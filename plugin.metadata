@@ -1,0 +1,13 @@
+{
+    "PluginName":  "TrailFollow",
+    "ProductInfoUrl":  null,
+    "UpdateSource":  null,
+    "CurrentVersion":  "0.9.0",
+    "AllowedVersions":  [
+                            {
+                                "Version":  "0.9.0",
+                                "Url":  null,
+                                "Checksum":  null
+                            }
+                        ]
+}

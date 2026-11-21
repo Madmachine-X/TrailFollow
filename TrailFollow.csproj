@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>TrailFollow</AssemblyName>
+    <RootNamespace>TrailFollow</RootNamespace>
+    <Version>0.9.0</Version>
+    <Authors>Madmachine</Authors>
+    <Company>Madmachine</Company>
+    <Copyright>Made by Madmachine</Copyright>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <!-- Dungeon Helper 설치 폴더 (기본: %AppData%\Dungeon Helper) -->
+    <DHPath Condition="'$(DHPath)' == ''">$(APPDATA)\Dungeon Helper</DHPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Dungeon Helper에 이미 들어 있는 DLL을 참조만 하고 복사하지 않음 -->
+    <Reference Include="VoK.Sdk">
+      <HintPath>$(DHPath)\VoK.Sdk.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>$(DHPath)\log4net.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="plugin.metadata" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

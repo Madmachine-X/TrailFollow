@@ -1,0 +1,10 @@
+# build output
+bin/
+obj/
+out/
+
+# local files created by the install script and diagnostics
+dh_path.txt
+trace/
+*.user
+.vs/
