@@ -29,7 +29,7 @@ The interface is available in **English and Korean**. It follows the Windows dis
 
 ## Install / update
 
-1. Download this repository (Code → Download ZIP) and extract it.
+1. Download this repository (Code → Download ZIP). **Before extracting**, right-click the ZIP → Properties → tick **Unblock** → OK, then extract it. (See [Windows security warnings](#windows-security-warnings).)
 2. Double-click `build_and_install.bat`.
    - If Dungeon Helper is running it is closed, the plugin is built and installed, and Dungeon Helper is started again.
    - If Dungeon Helper runs as administrator, Windows asks for permission to close it. Click Yes.
@@ -42,6 +42,15 @@ To remove the plugin, delete that `TrailFollow` folder.
 ### Updating from inside Dungeon Helper
 
 Open the TrailFollow settings page, go to the **About** tab and press **Check for updates**. If a newer version has been published in the `dist` folder of this repository, **Update now** downloads it and replaces the plugin files. Restart Dungeon Helper to apply. Nothing is checked or installed unless you press the button.
+
+## Windows security warnings
+
+The plugin is not code-signed, so Windows may warn about it. This is expected.
+
+- **Unblock the ZIP before extracting it.** Files downloaded from the internet are marked by Windows, and Windows 11 Smart App Control refuses to run marked files. Right-click the ZIP → Properties → tick **Unblock** → OK, then extract. If you already extracted it, delete the extracted folder and extract again from the unblocked ZIP.
+- **Blue "Windows protected your PC" window** when running `build_and_install.bat`: click **More info**, then **Run anyway**.
+- **"Smart App Control blocked a file that may be unsafe"**: this window has no Run button. Unblock the ZIP as described above and extract again.
+- **If Smart App Control still blocks the plugin** (this can happen with the ready-built file installed by the in-app updater, because it is unsigned): install by running `build_and_install.bat` instead, which builds the plugin on your own PC. The only other way is to turn Smart App Control off in Windows Security → App & browser control, which lowers protection for everything on the PC, so decide that for yourself.
 
 ## Quick start
 
