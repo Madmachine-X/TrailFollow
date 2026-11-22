@@ -11,6 +11,10 @@ namespace TrailFollow
         private readonly Follower _f;
         private readonly Label _title = new Label { AutoSize = true, Font = new Font("맑은 고딕", 11f, FontStyle.Bold) };
         private readonly ToolTip _tip = new ToolTip { AutoPopDelay = 20000, InitialDelay = 300, ReshowDelay = 100 };
+        private readonly Button _updCheck = new Button { Text = Lang.T("업데이트 확인", "Check for updates"), AutoSize = true };
+        private readonly Button _updInstall = new Button { Text = Lang.T("지금 업데이트", "Update now"), AutoSize = true };
+        private readonly Label _updMsg = new Label { AutoSize = true, MaximumSize = new Size(450, 0), Margin = new Padding(3, 6, 3, 6) };
+        private UpdateInfo _updInfo;
         private readonly ComboBox _lang = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 190 };
 
         // 공통 (모든 캐릭터)
@@ -253,6 +257,32 @@ namespace TrailFollow
                 AutoSize = true, ForeColor = Color.Gray, Margin = new Padding(3, 16, 3, 3)
             });
 
+            // ---------------- 정보 (v0.9.1) ----------------
+            var aboutPage = AddPage(tabs, Lang.T("정보", "About"));
+            aboutPage.Controls.Add(new Label { Text = "TrailFollow", AutoSize = true, Font = new Font("맑은 고딕", 14f, FontStyle.Bold), Margin = new Padding(3, 4, 3, 0) });
+            aboutPage.Controls.Add(new Label { Text = Lang.T("버전 ", "Version ") + Updater.Current.ToString(3) + "   ·   made by Madmachine", AutoSize = true, Margin = new Padding(3, 2, 3, 6) });
+            aboutPage.Controls.Add(Note(Lang.T(
+                "Dungeons & Dragons Online 멀티박스용 Dungeon Helper 플러그인입니다. 서브 캐릭터가 메인이 걸어간 길을 따라오고, 버프·힐·문·상자 같은 반복 동작을 같이 합니다.",
+                "A Dungeon Helper plugin for multiboxing Dungeons & Dragons Online. Alts follow the path your main walked and repeat routine actions such as buffs, heals, doors and chests.")));
+            var repoLink = new LinkLabel { Text = Updater.RepoUrl, AutoSize = true, Margin = new Padding(3, 6, 3, 6) };
+            repoLink.LinkClicked += (s, e) =>
+            {
+                try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(Updater.RepoUrl) { UseShellExecute = true }); } catch { }
+            };
+            aboutPage.Controls.Add(repoLink);
+
+            aboutPage.Controls.Add(Header(Lang.T("업데이트", "Update")));
+            _updInstall.Visible = false;
+            aboutPage.Controls.Add(Row(_updCheck, _updInstall));
+            aboutPage.Controls.Add(_updMsg);
+            Tip(Lang.T("GitHub에 더 새 버전이 있는지 확인합니다. 누를 때만 확인하며, 저절로 설치되지 않습니다.", "Checks GitHub for a newer version. It only checks when pressed and never installs by itself."), _updCheck);
+            Tip(Lang.T("새 버전을 내려받아 설치합니다. Dungeon Helper를 다시 시작하면 적용됩니다.", "Downloads and installs the new version. It takes effect after restarting Dungeon Helper."), _updInstall);
+            _updCheck.Click += async (s, e) => await CheckUpdate();
+            _updInstall.Click += async (s, e) => await InstallUpdate();
+            aboutPage.Controls.Add(Note(Lang.T(
+                "비공식 도구입니다. Standing Stone Games나 Dungeon Helper 개발자가 만들거나 승인한 것이 아니며, 사용에 따른 책임은 사용자에게 있습니다.",
+                "Unofficial tool. Not made or approved by Standing Stone Games or the Dungeon Helper developers. Use at your own risk.")));
+
             // ---------------- 전체 배치: 제목 / 탭 / 저장 줄 ----------------
             var bottom = new FlowLayoutPanel { AutoSize = true, WrapContents = false, Margin = new Padding(0, 4, 0, 0) };
             bottom.Controls.Add(_save);
@@ -279,6 +309,87 @@ namespace TrailFollow
             _timer.Start();
 
             LoadFromSettings();
+        }
+
+        // ---- 업데이트 (v0.9.1) ----
+        /// <summary>다른 스레드에서 돌아와도 화면은 화면 스레드에서만 건드림</summary>
+        private void Ui(Action a)
+        {
+            try
+            {
+                if (IsDisposed) return;
+                if (InvokeRequired) BeginInvoke(a); else a();
+            }
+            catch { }
+        }
+
+        private async System.Threading.Tasks.Task CheckUpdate()
+        {
+            _updCheck.Enabled = false;
+            _updInstall.Visible = false;
+            _updMsg.ForeColor = Color.DimGray;
+            _updMsg.Text = Lang.T("확인하는 중...", "Checking...");
+            try
+            {
+                var info = await System.Threading.Tasks.Task.Run(() => Updater.CheckAsync());
+                Ui(() =>
+                {
+                    _updInfo = info;
+                    if (Updater.IsNewer(info))
+                    {
+                        string notes = Lang.T(info.NotesKo, info.NotesEn) ?? info.NotesKo ?? info.NotesEn ?? "";
+                        _updMsg.ForeColor = Color.FromArgb(20, 110, 40);
+                        _updMsg.Text = Lang.T($"새 버전 {info.Version.ToString(3)} 이 있습니다. (지금 {Updater.Current.ToString(3)})", $"Version {info.Version.ToString(3)} is available. (You have {Updater.Current.ToString(3)})")
+                                       + (notes.Length > 0 ? "\n\n" + notes : "");
+                        _updInstall.Visible = true;
+                    }
+                    else
+                    {
+                        _updMsg.Text = Lang.T($"최신 버전입니다. ({Updater.Current.ToString(3)})", $"You have the latest version. ({Updater.Current.ToString(3)})");
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.Warn("[TrailFollow] 업데이트 확인 실패", ex);
+                Ui(() =>
+                {
+                    _updMsg.ForeColor = Color.Firebrick;
+                    _updMsg.Text = Lang.T("업데이트 정보를 확인하지 못했습니다. 인터넷 연결을 확인하거나 위 주소에서 직접 확인하세요.\n", "Could not check for updates. Check your internet connection or visit the address above.\n") + ex.Message;
+                });
+            }
+            finally { Ui(() => _updCheck.Enabled = true); }
+        }
+
+        private async System.Threading.Tasks.Task InstallUpdate()
+        {
+            var info = _updInfo;
+            if (info == null) return;
+            _updCheck.Enabled = false;
+            _updInstall.Enabled = false;
+            _updMsg.ForeColor = Color.DimGray;
+            _updMsg.Text = Lang.T("내려받는 중...", "Downloading...");
+            try
+            {
+                string folder = _f.PluginFolder;
+                await System.Threading.Tasks.Task.Run(() => Updater.InstallAsync(info, folder));
+                Ui(() =>
+                {
+                    _updInstall.Visible = false;
+                    _updMsg.ForeColor = Color.FromArgb(20, 110, 40);
+                    _updMsg.Text = Lang.T($"버전 {info.Version.ToString(3)} 을 설치했습니다. Dungeon Helper를 완전히 껐다가 다시 켜면 적용됩니다.", $"Version {info.Version.ToString(3)} is installed. Close Dungeon Helper completely and start it again to apply.");
+                });
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.Warn("[TrailFollow] 업데이트 설치 실패", ex);
+                Ui(() =>
+                {
+                    _updMsg.ForeColor = Color.Firebrick;
+                    _updMsg.Text = Lang.T("업데이트하지 못했습니다. 기존 버전은 그대로입니다.\n", "The update failed. Your current version is unchanged.\n") + ex.Message;
+                });
+            }
+            finally { Ui(() => { _updCheck.Enabled = true; _updInstall.Enabled = true; }); }
         }
 
         private Label Header(string text) => new Label { Text = text, AutoSize = true, Font = new Font(Font, FontStyle.Bold), Margin = new Padding(0, 10, 0, 2) };

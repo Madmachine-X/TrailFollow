@@ -32,11 +32,12 @@ namespace TrailFollow
         public string Name => "TrailFollow";
         public string Description => Lang.T("발자취 따라가기 + 서브 핫바 창 + 리더 따라 하기 (Awesome AF 대체)", "Trail following + alt hotbar windows + mimic the leader (an Awesome AF alternative)");
         public string Author => "Madmachine";
-        public Version Version => new Version(0, 9, 0);
+        public Version Version => new Version(0, 9, 1);
 
         public void Initialize(IDdoGameDataProvider gameDataProvider, string folder)
         {
-            Log.Info($"[TrailFollow] 초기화 v0.9.0 by Madmachine (폴더: {folder})");
+            Log.Info($"[TrailFollow] 초기화 v0.9.1 by Madmachine (폴더: {folder})");
+            Updater.CleanupOld(folder);   // v0.9.1: 지난 업데이트 때 남은 옛 파일 정리
             Lang.Init(folder);   // v0.9.0: 화면 언어 (한국어/영어)
             _shared = new SharedState();
             if (_shared.FreshlyCreated) GlobalSettings.Load(folder).ApplyTo(_shared);   // 첫 클라이언트가 공통 설정을 불러옴

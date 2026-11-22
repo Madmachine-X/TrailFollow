@@ -39,6 +39,10 @@ Manual install: build with `dotnet build TrailFollow.csproj -c Release -o out`, 
 
 To remove the plugin, delete that `TrailFollow` folder.
 
+### Updating from inside Dungeon Helper
+
+Open the TrailFollow settings page, go to the **About** tab and press **Check for updates**. If a newer version has been published in the `dist` folder of this repository, **Update now** downloads it and replaces the plugin files. Restart Dungeon Helper to apply. Nothing is checked or installed unless you press the button.
+
 ## Quick start
 
 1. Log in all characters with Dungeon Helper running. Each alt gets a small window on screen; the character you are playing gets the main window.

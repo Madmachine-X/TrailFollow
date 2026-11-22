@@ -52,6 +52,8 @@ namespace TrailFollow
         private readonly IDdoGameDataProvider _ddo;
         private readonly IGameDataProvider _g;
         private readonly string _folder;
+        /// <summary>플러그인이 설치된 폴더 (설정 파일과 TrailFollow.dll이 있는 곳)</summary>
+        public string PluginFolder => _folder;
         internal readonly SharedState Shared;
         private readonly Thread _thread;
         private volatile bool _alive = true;
