@@ -67,4 +67,5 @@ If the folder `%UserProfile%\Downloads\TrailFollow\trace` exists, the plugin wri
 
 - Hotbar and slot numbers in the settings are the ones shown in the game, starting at 1.
 - Input sent to a hotbar that is hidden in the game may be ignored, so keep the hotbars you use visible.
+- The `dist` folder holds the ready-built plugin used by the in-app updater. It is built from the source in this repository.
 - The plugin needs `VoK.Sdk.dll` from your Dungeon Helper installation to build. It is referenced from there and is not part of this repository.

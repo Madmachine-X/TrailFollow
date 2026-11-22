@@ -16,6 +16,9 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <!-- 빌드한 PC의 폴더 경로(사용자 이름 포함)가 DLL 안에 들어가지 않게 디버그 정보를 만들지 않음 -->
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
     <!-- Dungeon Helper 설치 폴더 (기본: %AppData%\Dungeon Helper) -->
     <DHPath Condition="'$(DHPath)' == ''">$(APPDATA)\Dungeon Helper</DHPath>
   </PropertyGroup>
