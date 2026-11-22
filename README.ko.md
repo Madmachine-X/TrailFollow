@@ -34,6 +34,22 @@ Awesome AF를 대신하는 Dungeon Helper 플러그인입니다. **Awesome AF는
 
 ## 설치 / 업데이트
 
+설치 방법은 두 가지입니다. 어느 쪽이든 먼저 이 저장소를 받습니다: 초록색 **Code** → **Download ZIP**. 압축을 풀기 **전에** 압축 파일 우클릭 → 속성 → **차단 해제** 체크 → 확인을 한 뒤 풉니다.
+
+### 방법 A: 완성 파일을 복사해 넣기 (가장 간단)
+
+빌드나 실행 파일이 없어서 경고창이 뜨지 않고, .NET SDK도 설치하지 않습니다.
+
+1. Dungeon Helper를 완전히 끕니다. (트레이 아이콘까지 종료)
+2. `Win + R`을 누르고 `%AppData%\Dungeon Helper\plugins` 를 입력한 뒤 Enter.
+3. 그 안에 `TrailFollow` 폴더를 만듭니다. (이미 있으면 그대로 둡니다)
+4. 압축을 푼 폴더의 `dist` 안에 있는 파일 3개를 그 폴더에 복사합니다: `TrailFollow.dll`, `plugin.metadata`, `TrailFollow.deps.json`. (`version.json`은 필요 없습니다)
+5. Dungeon Helper를 켜고 플러그인 목록에서 **TrailFollow**를 켭니다. (Awesome AF는 끕니다)
+
+스마트 앱 컨트롤이 방법 A의 파일을 막으면 아래 방법 B를 쓰세요.
+
+### 방법 B: 스크립트로 직접 빌드해 설치
+
 1. (처음 한 번) PowerShell에서 `winget install Microsoft.DotNet.SDK.8`을 실행합니다.
 2. **Dungeon Helper를 완전히 종료**합니다. 트레이 아이콘까지 닫아야 합니다.
 3. `build_and_install.bat`을 더블클릭합니다. `Done!`이 나오면 성공입니다.

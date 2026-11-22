@@ -29,13 +29,29 @@ The interface is available in **English and Korean**. It follows the Windows dis
 
 ## Install / update
 
-1. Download this repository (Code → Download ZIP). **Before extracting**, right-click the ZIP → Properties → tick **Unblock** → OK, then extract it. (See [Windows security warnings](#windows-security-warnings).)
-2. Double-click `build_and_install.bat`.
+There are two ways to install. Both start the same way:
+
+Download this repository (Code → Download ZIP). **Before extracting**, right-click the ZIP → Properties → tick **Unblock** → OK, then extract it. (See [Windows security warnings](#windows-security-warnings).)
+
+### Option A: copy the ready-built files (simplest)
+
+Nothing is built or run, so there is no script warning and no .NET SDK to install.
+
+1. Close Dungeon Helper completely (including the tray icon).
+2. Press `Win + R`, type `%AppData%\Dungeon Helper\plugins` and press Enter.
+3. Create a folder named `TrailFollow` there (skip this if it already exists).
+4. Copy the three files from the `dist` folder of the extracted ZIP into it: `TrailFollow.dll`, `plugin.metadata`, `TrailFollow.deps.json`. (`version.json` is not needed.)
+5. Start Dungeon Helper and enable **TrailFollow** in the plugin list.
+
+### Option B: build it yourself with the script
+
+1. Double-click `build_and_install.bat`.
+   - The first time, it installs the .NET 8 SDK (a few minutes).
    - If Dungeon Helper is running it is closed, the plugin is built and installed, and Dungeon Helper is started again.
    - If Dungeon Helper runs as administrator, Windows asks for permission to close it. Click Yes.
-3. In Dungeon Helper, enable **TrailFollow** in the plugin list.
+2. In Dungeon Helper, enable **TrailFollow** in the plugin list.
 
-Manual install: build with `dotnet build TrailFollow.csproj -c Release -o out`, then copy `out\TrailFollow.dll` and `plugin.metadata` to `%AppData%\Dungeon Helper\plugins\TrailFollow`.
+Use Option B if Windows Smart App Control blocks the ready-built file from Option A.
 
 To remove the plugin, delete that `TrailFollow` folder.
 
